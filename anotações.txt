@@ -1,4 +1,5 @@
 Coisas para saber:
+IMPORTANTE - usamos tensorflow v2.14.0
 * Ler os comentários do código
 * Saber dizer o que é acurácia e loss
 * Mostrar o Keras e o que é
