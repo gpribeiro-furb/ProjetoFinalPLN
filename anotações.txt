@@ -1,0 +1,67 @@
+Coisas para saber:
+* Ler os comentários do código
+* Saber dizer o que é acurácia e loss
+* Mostrar o Keras e o que é
+* Explicar sobre usar várias camadas do LSTM, como funciona
+* Mostrar modelo anterior, com a métrica de MSE e RMSE
+	- MSE é a média dos quadrados das diferenças entre as previsões e os valores reais. = (média de -> (previsão - real))^2    =>     3(espanhol) - 1(portugues) = 2 ^2 = 4
+	- RMSE é a raiz quadrada do MSE (então só não faz o "ao quadrado") = média de -> (previsão - real)   =>   3(espanhol) - 1(portugues) = 2 
+* Sobre o código:
+	- O que é batch_size
+	- O que faz o model.add(Dense(units=1)) (linha 38)
+		+So, the line model.add(Dense(units=1)) adds a fully connected layer with one neuron to the neural network model. This is often used as the output layer in binary classification problems, where the model is making a binary decision (e.g., yes/no, 1/0). The activation function for this layer is often a sigmoid function, which squashes the output between 0 and 1, representing probabilities
+	- optimizer adam, Outros optimizers (linha 39)
+	
+	
+	
+	
+	
+Explicação de algumas linhas de código:
+
+https://pieriantraining.com/tensorflow-lstm-example-a-beginners-guide/
+
+
+Código do GPT:
+
+import tensorflow as tf
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import LSTM, Dense
+
+# Assume you have sequences of text data and corresponding labels
+
+# Step 1: Data Preprocessing
+# Tokenize your text data, pad sequences, and encode labels
+
+# Example data preprocessing
+max_words = 10000  # Max number of words in your vocabulary
+max_sequence_length = 100  # Max length of your input sequences
+
+tokenizer = tf.keras.preprocessing.text.Tokenizer(num_words=max_words)
+tokenizer.fit_on_texts(texts)
+
+sequences = tokenizer.texts_to_sequences(texts)
+padded_sequences = tf.keras.preprocessing.sequence.pad_sequences(sequences, maxlen=max_sequence_length)
+
+# Encode labels (assuming binary classification)
+labels = tf.keras.utils.to_categorical(labels, num_classes=2)
+
+# Split data into training and testing sets
+x_train, x_test, y_train, y_test = train_test_split(padded_sequences, labels, test_size=0.2, random_state=42)
+
+# Step 2: Build the LSTM Model
+model = Sequential()
+model.add(LSTM(128, input_shape=(max_sequence_length,)))
+model.add(Dense(2, activation='softmax'))  # Adjust output size based on your task
+
+# Compile the model
+model.compile(optimizer='adam', loss='categorical_crossentropy', metrics=['accuracy'])
+
+# Step 3: Train the Model
+epochs = 10
+batch_size = 32
+
+model.fit(x_train, y_train, epochs=epochs, batch_size=batch_size, validation_data=(x_test, y_test))
+
+# Step 4: Evaluate the Model
+loss, accuracy = model.evaluate(x_test, y_test)
+print(f'Test Loss: {loss:.4f}, Test Accuracy: {accuracy:.4f}')
